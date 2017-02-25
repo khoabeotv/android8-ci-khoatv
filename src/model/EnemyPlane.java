@@ -79,7 +79,7 @@ public class EnemyPlane extends Plane {
         }
     }
 
-    public boolean exploed() {
+    public boolean explode() {
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastTimeExpl > 100) {
             setImage(GameManager.loadImageFromRes("expl-" + index + ".png"));

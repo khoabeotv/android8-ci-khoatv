@@ -47,7 +47,7 @@ public class GameManager {
             if (!enemy.isDead()) {
                 enemy.shoot(loadImageFromRes("bullet-round.png"));
                 enemy.move();
-            } else if (enemy.exploed()) {
+            } else if (enemy.explode()) {
                 arrEnemy.remove(i);
             }
         }
