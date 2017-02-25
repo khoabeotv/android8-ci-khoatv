@@ -1,20 +1,24 @@
+package model;
+
 import java.awt.*;
 
 /**
  * Created by KhoaBeo on 2/21/2017.
  */
-public class PlayerBullet {
+public class Bullet {
     private Image image;
     private int x;
     private int y;
     private int speed;
 
-    public PlayerBullet() {
+    public Bullet(Image image, int speed) {
+        this.image = image;
+        this.speed = speed;
 
     }
 
     public void moveBullet() {
-        setY(getY() - 10);
+        setY(getY() - speed);
     }
 
     public Image getImage() {
@@ -39,5 +43,10 @@ public class PlayerBullet {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public Rectangle getRect() {
+        Rectangle rectangle = new Rectangle(x, y, this.image.getWidth(null), this.image.getHeight(null));
+        return rectangle;
     }
 }
