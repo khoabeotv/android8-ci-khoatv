@@ -1,13 +1,11 @@
 package gui;
 
-
-import service.GameManager;
+import program.GameManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
 
 
 /**
@@ -15,14 +13,14 @@ import java.awt.image.BufferedImage;
  */
 public class GamePanel extends JPanel implements Runnable, KeyListener {
 
-    private GameManager gameManager;
     private Thread thread;
     private boolean isRunning;
-
+    private GameManager gameManager;
 
     public GamePanel() {
         addKeyListener(this);
         setFocusable(true);
+
         gameManager = new GameManager();
 
         isRunning = true;
@@ -34,7 +32,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     public void run() {
         while (isRunning) {
             repaint();
-            gameManager.event();
+            gameManager.run();
 
             try {
                 Thread.sleep(17);
@@ -47,7 +45,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     @Override
     protected void paintComponent(Graphics graphics) {
         Graphics2D g2d = (Graphics2D) graphics;
-        gameManager.drawImage(g2d);
+        super.paintComponent(graphics);
+        gameManager.draw(g2d);
     }
 
     @Override
