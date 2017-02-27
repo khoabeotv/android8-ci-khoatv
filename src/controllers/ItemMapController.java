@@ -28,6 +28,10 @@ public class ItemMapController {
         model.move();
     }
 
+    public ItemMapModel getModel() {
+        return model;
+    }
+
     public void draw(Graphics2D g2d) {
         view.draw(g2d, model);
     }

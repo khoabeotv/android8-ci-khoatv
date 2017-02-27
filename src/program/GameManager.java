@@ -22,6 +22,7 @@ public class GameManager {
     private List<EnemyBulletController> enemyBullets;
     private List<ItemMapController> itemMaps;
     private long lastTimeAddEnemy;
+    private long lastTimeAddItemMap;
 
     public GameManager() {
         Image image = Utils.loadImageFromRes("plane1.png");
@@ -33,9 +34,32 @@ public class GameManager {
         enemyBullets = new ArrayList<>();
         enemyPlanes = new ArrayList<>();
         itemMaps = new ArrayList<>();
+
+        Image background = Utils.loadImageFromRes("background.png");
+        ItemMapController backgroundOne = new ItemMapController(0, 0, background);
+        ItemMapController backgroundTwo = new ItemMapController(0, -background.getHeight(null), background);
+        itemMaps.add(backgroundOne);
+        itemMaps.add(backgroundTwo);
     }
 
     public void draw(Graphics2D g2d) {
+        //Draw map
+        for (int i = 0; i < itemMaps.size(); i++) {
+            ItemMapController itemMap = itemMaps.get(i);
+
+            if (i < 2 && itemMap.getModel().getY() == GameFrame.HEIGHT_F) {
+                itemMap.getModel().setY(-itemMap.getModel().getHeight());
+            }
+
+            if (itemMap.getModel().getY() > GameFrame.HEIGHT_F) {
+                itemMaps.remove(itemMap);
+            }
+
+            itemMap.run();
+            itemMap.draw(g2d);
+        }
+
+        //Draw player
         for (int i = 0; i < playerBullets.size(); i++) {
             PlayerBulletController playerBullet = playerBullets.get(i);
 
@@ -43,81 +67,67 @@ public class GameManager {
                 playerBullets.remove(i);
             }
 
-            playerBullet.draw(g2d);
             playerBullet.run();
+            playerBullet.draw(g2d);
         }
         playerPlane.draw(g2d);
 
+        //Draw enemies
         for (int i = 0; i < enemyPlanes.size(); i++) {
             EnemyPlaneController enemyPlane = enemyPlanes.get(i);
-            if (enemyPlane.getModel().getX() > GameFrame.HEIGHT_F)  {
+            if (!enemyPlane.run(playerBullets, enemyBullets) || enemyPlane.getModel().getX() > GameFrame.HEIGHT_F)  {
                 enemyPlanes.remove(i);
             }
             enemyPlane.draw(g2d);
-            enemyPlane.run();
         }
         for (int i = 0; i < enemyBullets.size(); i++) {
-            enemyBullets.get(i).draw(g2d);
-            enemyBullets.get(i).run();
-        }
+            EnemyBulletController enemyBullet = enemyBullets.get(i);
 
-        for (int i = 0; i < itemMaps.size(); i++) {
-            itemMaps.get(i).draw(g2d);
-            itemMaps.get(i).run();
+            if (enemyBullet.getModel().getY() > GameFrame.HEIGHT_F) {
+                enemyBullets.remove(i);
+            }
+
+            enemyBullet.run();
+            enemyBullet.draw(g2d);
         }
     }
 
     public void run() {
         playerPlane.run(playerBullets);
         addEnemy();
+        addItemMap();
     }
 
     private void addEnemy() {
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastTimeAddEnemy > 1000) {
+        if (currentTime - lastTimeAddEnemy > 500) {
             Random rd = new Random();
             int x = rd.nextInt(GameFrame.WIDTH_F + 200) - 100;
             if (x < 0) {
                 Image image =  Utils.loadImageFromRes("enemy-green-1.png");
-                EnemyPlaneController enemyPlane = new EnemyPlaneController(
-                        new EnemyPlaneModel(x,
-                                -50,
-                                image.getWidth(null),
-                                image.getHeight(null),
-                                "RIGHT"),
-                        new EnemyPlaneView(image)
-                );
+                EnemyPlaneController enemyPlane = new EnemyPlaneController(x, -50, image, "RIGHT");
                 enemyPlanes.add(enemyPlane);
             } else if (x > GameFrame.WIDTH_F) {
                 Image image =  Utils.loadImageFromRes("enemy-green-2.png");
-                EnemyPlaneController enemyPlane = new EnemyPlaneController(
-                        new EnemyPlaneModel(x,
-                                -50, image.getWidth(null),
-                                image.getHeight(null),
-                                "LEFT"),
-                        new EnemyPlaneView(image)
-                );
+                EnemyPlaneController enemyPlane = new EnemyPlaneController(x, -50, image, "LEFT");
                 enemyPlanes.add(enemyPlane);
             } else {
                 Image image =  Utils.loadImageFromRes("enemy-green-3.png");
-                EnemyPlaneController enemyPlane = new EnemyPlaneController(
-                        new EnemyPlaneModel(x,
-                                -50, image.getWidth(null),
-                                image.getHeight(null),
-                                "DOWN"),
-                        new EnemyPlaneView(image)
-                );
+                EnemyPlaneController enemyPlane = new EnemyPlaneController(x, -50, image, "DOWN");
                 enemyPlanes.add(enemyPlane);
             }
             lastTimeAddEnemy = currentTime;
         }
     }
 
-    public void collide() {
-        for (int i = 0; i < enemyPlanes.size(); i++) {
-            for (int j = 0; j < playerBullets.size(); i++) {
-
-            }
+    private void addItemMap() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastTimeAddItemMap > 10000) {
+            Random rd = new Random();
+            int x = rd.nextInt(GameFrame.WIDTH_F - 100);
+            ItemMapController itemMap = new ItemMapController(x, -50, Utils.loadImageFromRes("island-"  + rd.nextInt(2) + ".png"));
+            itemMaps.add(itemMap);
+            lastTimeAddItemMap = currentTime;
         }
     }
 

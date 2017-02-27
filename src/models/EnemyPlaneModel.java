@@ -11,6 +11,7 @@ public class EnemyPlaneModel {
     private int width;
     private int height;
     private String orient;
+    private boolean dead;
 
     public EnemyPlaneModel(int x, int y, int width, int height, String orient) {
         this.x = x;
@@ -34,6 +35,14 @@ public class EnemyPlaneModel {
 
     public int getHeight() {
         return height;
+    }
+
+    public boolean isDead() {
+        return dead;
+    }
+
+    public void setDead(boolean dead) {
+        this.dead = dead;
     }
 
     public void move() {
