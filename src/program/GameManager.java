@@ -25,15 +25,17 @@ public class GameManager {
     private long lastTimeAddItemMap;
 
     public GameManager() {
-        Image image = Utils.loadImageFromRes("plane1.png");
-        playerPlane = new PlayerPlaneController((GameFrame.WIDTH_F - image.getWidth(null)) / 2,
-                GameFrame.HEIGHT_F - image.getHeight(null) - 50,
-                image);
 
         playerBullets = new ArrayList<>();
         enemyBullets = new ArrayList<>();
         enemyPlanes = new ArrayList<>();
         itemMaps = new ArrayList<>();
+
+        Image image = Utils.loadImageFromRes("plane1.png");
+        playerPlane = new PlayerPlaneController((GameFrame.WIDTH_F - image.getWidth(null)) / 2,
+                GameFrame.HEIGHT_F - image.getHeight(null) - 50,
+                image,
+                playerBullets);
 
         Image background = Utils.loadImageFromRes("background.png");
         ItemMapController backgroundOne = new ItemMapController(0, 0, background);
@@ -75,7 +77,7 @@ public class GameManager {
         //Draw enemies
         for (int i = 0; i < enemyPlanes.size(); i++) {
             EnemyPlaneController enemyPlane = enemyPlanes.get(i);
-            if (!enemyPlane.run(playerBullets, enemyBullets) || enemyPlane.getModel().getX() > GameFrame.HEIGHT_F)  {
+            if (!enemyPlane.run(playerBullets) || enemyPlane.getModel().getX() > GameFrame.HEIGHT_F)  {
                 enemyPlanes.remove(i);
             }
             enemyPlane.draw(g2d);
@@ -93,7 +95,7 @@ public class GameManager {
     }
 
     public void run() {
-        playerPlane.run(playerBullets);
+        playerPlane.run();
         addEnemy();
         addItemMap();
     }
@@ -105,15 +107,15 @@ public class GameManager {
             int x = rd.nextInt(GameFrame.WIDTH_F + 200) - 100;
             if (x < 0) {
                 Image image =  Utils.loadImageFromRes("enemy-green-1.png");
-                EnemyPlaneController enemyPlane = new EnemyPlaneController(x, -50, image, "RIGHT");
+                EnemyPlaneController enemyPlane = new EnemyPlaneController(x, -50, image, "RIGHT", enemyBullets);
                 enemyPlanes.add(enemyPlane);
             } else if (x > GameFrame.WIDTH_F) {
                 Image image =  Utils.loadImageFromRes("enemy-green-2.png");
-                EnemyPlaneController enemyPlane = new EnemyPlaneController(x, -50, image, "LEFT");
+                EnemyPlaneController enemyPlane = new EnemyPlaneController(x, -50, image, "LEFT", enemyBullets);
                 enemyPlanes.add(enemyPlane);
             } else {
                 Image image =  Utils.loadImageFromRes("enemy-green-3.png");
-                EnemyPlaneController enemyPlane = new EnemyPlaneController(x, -50, image, "DOWN");
+                EnemyPlaneController enemyPlane = new EnemyPlaneController(x, -50, image, "DOWN", enemyBullets);
                 enemyPlanes.add(enemyPlane);
             }
             lastTimeAddEnemy = currentTime;

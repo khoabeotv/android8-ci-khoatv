@@ -7,15 +7,10 @@ import java.awt.*;
 /**
  * Created by KhoaBeo on 2/26/2017.
  */
-public class PlayerBulletView {
-
-    private Image image;
+public class PlayerBulletView extends GameView {
 
     public PlayerBulletView(Image image) {
-        this.image = image;
+        super(image);
     }
 
-    public void draw(Graphics2D g2d, PlayerBulletModel model) {
-        g2d.drawImage(image, model.getX(), model.getY(), null);
-    }
 }

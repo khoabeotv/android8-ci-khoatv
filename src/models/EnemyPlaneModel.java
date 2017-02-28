@@ -1,40 +1,19 @@
 package models;
 
+import java.awt.*;
+
 /**
  * Created by KhoaBeo on 2/27/2017.
  */
-public class EnemyPlaneModel {
+public class EnemyPlaneModel extends GameModel {
 
     public static final int SPEED = 2;
-    private int x;
-    private int y;
-    private int width;
-    private int height;
     private String orient;
     private boolean dead;
 
     public EnemyPlaneModel(int x, int y, int width, int height, String orient) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+        super(x, y, width, height);
         this.orient = orient;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
     }
 
     public boolean isDead() {
@@ -43,6 +22,10 @@ public class EnemyPlaneModel {
 
     public void setDead(boolean dead) {
         this.dead = dead;
+    }
+
+    public Rectangle getRect() {
+        return new Rectangle(x, y, width, height);
     }
 
     public void move() {

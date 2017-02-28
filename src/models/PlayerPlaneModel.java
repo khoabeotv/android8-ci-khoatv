@@ -10,37 +10,14 @@ import java.util.BitSet;
 /**
  * Created by KhoaBeo on 2/26/2017.
  */
-public class PlayerPlaneModel {
+public class PlayerPlaneModel extends GameModel {
 
     public static final int SPEED = 4;
-    private int x;
-    private int y;
-    private int width;
-    private int height;
     private BitSet bitSet;
 
     public PlayerPlaneModel(int x, int y, int width, int height) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+        super(x, y, width, height);
         bitSet = new BitSet();
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
     }
 
     public BitSet getBitSet() {

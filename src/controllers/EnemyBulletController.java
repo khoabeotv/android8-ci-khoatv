@@ -8,14 +8,10 @@ import java.awt.*;
 /**
  * Created by KhoaBeo on 2/27/2017.
  */
-public class EnemyBulletController {
-
-    private EnemyBulletModel model;
-    private EnemyBulletView view;
+public class EnemyBulletController extends GameController {
 
     public EnemyBulletController(EnemyBulletModel model, EnemyBulletView view) {
-        this.model = model;
-        this.view = view;
+        super(view, model);
     }
 
     public EnemyBulletController(int x, int y, Image image) {
@@ -23,15 +19,12 @@ public class EnemyBulletController {
                 new EnemyBulletView(image));
     }
 
+    @Override
     public void run() {
-        model.fly();
+        ((EnemyBulletModel)model).fly();
     }
 
     public EnemyBulletModel getModel() {
-        return model;
-    }
-
-    public void draw(Graphics2D g2d) {
-        view.draw(g2d, model);
+        return (EnemyBulletModel)model;
     }
 }

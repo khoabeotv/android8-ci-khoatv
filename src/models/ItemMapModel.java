@@ -3,40 +3,17 @@ package models;
 /**
  * Created by KhoaBeo on 2/27/2017.
  */
-public class ItemMapModel {
-    private int x;
-    private int y;
-    private int width;
-    private int height;
+public class ItemMapModel extends GameModel {
 
     public ItemMapModel(int x, int y, int width, int height) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
+        super(x, y, width, height);
     }
 
     public void move() {
         y++;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 }

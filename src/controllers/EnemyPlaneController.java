@@ -6,34 +6,39 @@ import views.EnemyPlaneView;
 
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.awt.Graphics2D;
 import java.util.List;
 
 
 /**
  * Created by KhoaBeo on 2/27/2017.
  */
-public class EnemyPlaneController {
+public class EnemyPlaneController extends GameController {
 
-    private EnemyPlaneModel model;
-    private EnemyPlaneView view;
     private long lastTimeAddBullet;
+    private List<EnemyBulletController> enemyBullets;
 
-    public EnemyPlaneController(EnemyPlaneModel model, EnemyPlaneView view) {
-        this.model = model;
-        this.view = view;
+    public EnemyPlaneController(EnemyPlaneModel model, EnemyPlaneView view, List<EnemyBulletController> playerBullets) {
+        super(view, model);
+        this.enemyBullets = playerBullets;
     }
 
-    public EnemyPlaneController(int x, int y, Image image, String orient) {
-        this(new EnemyPlaneModel(x, y, image.getWidth(null), image.getHeight(null), orient),
-                new EnemyPlaneView(image));
+    public EnemyPlaneController(int x, int y, Image image, String orient, List<EnemyBulletController> playerBullets) {
+        this(new EnemyPlaneModel(
+                        x,
+                        y,
+                        image.getWidth(null),
+                        image.getHeight(null), orient),
+                new EnemyPlaneView(image),
+                playerBullets);
     }
 
-    public boolean run(List<PlayerBulletController> playerBullets, List<EnemyBulletController> enemyBullets) {
+    public boolean run(List<PlayerBulletController> playerBullets) {
+        EnemyPlaneModel model = (EnemyPlaneModel) this.model;
+        EnemyPlaneView view = (EnemyPlaneView) this.view;
         if (!model.isDead()) {
             model.move();
             collide(playerBullets);
-            addBullet(enemyBullets);
+            addBullet();
             return true;
         } else {
             return view.explode();
@@ -42,15 +47,15 @@ public class EnemyPlaneController {
 
     private void collide(List<PlayerBulletController> playerBullets) {
         for (int i = 0; i < playerBullets.size(); i++) {
-            Rectangle rectangle = getRect().intersection(playerBullets.get(i).getRect());
+            Rectangle rectangle = ((EnemyPlaneModel)model).getRect().intersection(playerBullets.get(i).getRect());
             if (!rectangle.isEmpty()) {
                 playerBullets.remove(i);
-                model.setDead(true);
+                ((EnemyPlaneModel)model).setDead(true);
             }
         }
     }
 
-    private void addBullet(List<EnemyBulletController> enemyBullets) {
+    private void addBullet() {
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastTimeAddBullet > 1000) {
             Image image = Utils.loadImageFromRes("bullet-round.png");
@@ -63,15 +68,7 @@ public class EnemyPlaneController {
         }
     }
 
-    private Rectangle getRect() {
-        return new Rectangle(model.getX(), model.getY(), model.getWidth(), model.getHeight());
-    }
-
     public EnemyPlaneModel getModel() {
-        return model;
-    }
-
-    public void draw(Graphics2D g2d) {
-        view.draw(g2d, model);
+        return (EnemyPlaneModel)model;
     }
 }

@@ -9,14 +9,10 @@ import java.util.Random;
 /**
  * Created by KhoaBeo on 2/27/2017.
  */
-public class ItemMapController {
-
-    private ItemMapModel model;
-    private ItemMapView view;
+public class ItemMapController extends GameController {
 
     public ItemMapController(ItemMapModel model, ItemMapView view) {
-        this.model = model;
-        this.view = view;
+        super(view, model);
     }
 
     public ItemMapController(int x, int y, Image image) {
@@ -24,15 +20,12 @@ public class ItemMapController {
                 new ItemMapView(image));
     }
 
+    @Override
     public void run() {
-        model.move();
+        ((ItemMapModel)model).move();
     }
 
     public ItemMapModel getModel() {
-        return model;
-    }
-
-    public void draw(Graphics2D g2d) {
-        view.draw(g2d, model);
+        return (ItemMapModel)model;
     }
 }

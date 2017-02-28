@@ -7,14 +7,10 @@ import java.awt.*;
 /**
  * Created by KhoaBeo on 2/26/2017.
  */
-public class PlayerBulletController {
-
-    private PlayerBulletModel model;
-    private PlayerBulletView view;
+public class PlayerBulletController extends GameController {
 
     public PlayerBulletController(PlayerBulletModel model, PlayerBulletView view) {
-        this.model = model;
-        this.view = view;
+        super(view, model);
     }
 
     public PlayerBulletController(int x, int y, Image image) {
@@ -22,19 +18,16 @@ public class PlayerBulletController {
                 new PlayerBulletView(image));
     }
 
+    @Override
     public void run() {
-        model.fly();
-    }
-
-    public void draw(Graphics2D g2d) {
-        view.draw(g2d, model);
+        ((PlayerBulletModel)model).fly();
     }
 
     public Rectangle getRect() {
-        return new Rectangle(model.getX(), model.getY(), model.getWidth(), model.getHeight());
+        return ((PlayerBulletModel)model).getRect();
     }
 
     public PlayerBulletModel getModel() {
-        return model;
+        return (PlayerBulletModel)model;
     }
 }
