@@ -100,7 +100,7 @@ public class GameManager {
 
     private void addEnemy() {
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastTimeAddEnemy > 500) {
+        if (currentTime - lastTimeAddEnemy > 700) {
             Random rd = new Random();
             int x = rd.nextInt(GameFrame.WIDTH_F + 200) - 100;
             if (x < 0) {

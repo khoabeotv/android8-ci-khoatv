@@ -21,7 +21,7 @@ public class EnemyPlaneView {
     }
 
     public void draw(Graphics2D g2d, EnemyPlaneModel model) {
-        g2d.drawImage(image, model.getX(), model.getY(), model.getWidth(), model.getHeight(), null);
+        g2d.drawImage(image, model.getX(), model.getY(), null);
     }
 
     public boolean explode() {
