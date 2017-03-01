@@ -16,6 +16,7 @@ import java.util.BitSet;
 public class PlayerPlaneController extends GameController implements Collision {
 
     private long lastShoot;
+    private long lastTimeAddRocket;
 
     public PlayerPlaneController(PlayerPlaneModel model, PlayerPlaneView view) {
         super(view, model);
@@ -50,6 +51,7 @@ public class PlayerPlaneController extends GameController implements Collision {
                 lastShoot = currentTime;
             }
         }
+        addRocket();
     }
 
     private void shoot() {
@@ -97,6 +99,21 @@ public class PlayerPlaneController extends GameController implements Collision {
     private void addBullet(int x, int y, Image image, String orient) {
         GameController playerBullet = new PlayerBulletController(x, y, image, orient);
         GameManager.gameControllers.add(playerBullet);
+    }
+
+    private void addRocket() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastTimeAddRocket > 1000) {
+            if (((PlayerPlaneModel) model).getBulletLevel() > 2) {
+                GameController playerRocket = new PlayerRocketController(
+                        model.getMidWidth() - Utils.loadImageFromRes("rocket-0.png").getWidth(null) / 2,
+                        model.getY() - Utils.loadImageFromRes("rocket-0.png").getHeight(null),
+                        "rocket"
+                );
+                GameManager.gameControllers.add(playerRocket);
+            }
+            lastTimeAddRocket = currentTime;
+        }
     }
 
     public BitSet getBitSet() {

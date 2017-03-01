@@ -55,7 +55,7 @@ public class EnemyPlaneController extends GameController implements Collision {
 
     @Override
     public void collide(Collision model) {
-        if (model instanceof PlayerBulletController) {
+        if (model instanceof PlayerBulletController || model instanceof PlayerRocketController) {
             ((EnemyPlaneModel) this.model).setDead(true);
         }
     }

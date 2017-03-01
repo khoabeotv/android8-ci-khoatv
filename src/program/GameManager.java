@@ -42,7 +42,6 @@ public class GameManager {
 
         itemMapIndex = 102;
         for (int i = 1; i <= SUM_ITEM_MAP + 1; i++) {
-            System.out.println(itemMapIndex);
             image = Utils.loadImageFromRes("BAS/BAS_" + itemMapIndex + ".png");
             GameController itemMap = new ItemMapController(0, GameFrame.HEIGHT_F - i * ItemMapController.HEIGHT_ITEM, image);
             gameControllers.add(itemMap);
@@ -100,10 +99,12 @@ public class GameManager {
     }
 
     private void addItemMap() {
-        Image image = Utils.loadImageFromRes("BAS/BAS_" + itemMapIndex + ".png");
-        GameController newItemMap = new ItemMapController(0, -ItemMapController.HEIGHT_ITEM, image);
-        gameControllers.add(SUM_ITEM_MAP + 2, newItemMap);
-        itemMapIndex--;
+        if (itemMapIndex > 0) {
+            Image image = Utils.loadImageFromRes("BAS/BAS_" + itemMapIndex + ".png");
+            GameController newItemMap = new ItemMapController(0, -ItemMapController.HEIGHT_ITEM, image);
+            gameControllers.add(SUM_ITEM_MAP + 2, newItemMap);
+            itemMapIndex--;
+        }
     }
 
     private void addPowerUp() {
