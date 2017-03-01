@@ -19,11 +19,12 @@ import java.util.List;
 public class GameManager {
 
     public static final List<GameController> gameControllers = new ArrayList<>();
+    public static final int SUM_ITEM_MAP = GameFrame.HEIGHT_F / ItemMapController.HEIGHT_ITEM;
 
     private GameController playerPlane;
     private long lastTimeAddEnemy;
-    private long lastTimeAddItemMap;
     private long lastTimeAddPowerUp;
+    private int itemMapIndex;
 
     public GameManager() {
         Image image = Utils.loadImageFromRes("plane1.png");
@@ -33,12 +34,20 @@ public class GameManager {
                 image
         );
 
-        Image background = Utils.loadImageFromRes("background.png");
-        GameController backgroundOne = new ItemMapController(0, 0, background);
-        GameController backgroundTwo = new ItemMapController(0, -background.getHeight(null), background);
+        GameController backgroundOne = new ItemMapController(0, 0);
+        GameController backgroundTwo = new ItemMapController(0, -Utils.loadImageFromRes("background.png").getHeight(null));
 
         gameControllers.add(backgroundOne);
         gameControllers.add(backgroundTwo);
+
+        itemMapIndex = 102;
+        for (int i = 1; i <= SUM_ITEM_MAP + 1; i++) {
+            System.out.println(itemMapIndex);
+            image = Utils.loadImageFromRes("BAS/BAS_" + itemMapIndex + ".png");
+            GameController itemMap = new ItemMapController(0, GameFrame.HEIGHT_F - i * ItemMapController.HEIGHT_ITEM, image);
+            gameControllers.add(itemMap);
+            itemMapIndex--;
+        }
         gameControllers.add(playerPlane);
     }
 
@@ -57,11 +66,12 @@ public class GameManager {
                     Utils.gameRemove(gameController);
                 } else {
                     gameControllers.remove(gameController);
+                    addItemMap();
                 }
+                i--;
             }
         }
         setBackground();
-        addItemMap();
         addEnemy();
         addPowerUp();
         CollisionController.instance.checkCollide();
@@ -90,14 +100,10 @@ public class GameManager {
     }
 
     private void addItemMap() {
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - lastTimeAddItemMap > 10000) {
-            Random rd = new Random();
-            int x = rd.nextInt(GameFrame.WIDTH_F - 100);
-            GameController itemMap = new ItemMapController(x, -50, Utils.loadImageFromRes("island-" + rd.nextInt(2) + ".png"));
-            gameControllers.add(2, itemMap);
-            lastTimeAddItemMap = currentTime;
-        }
+        Image image = Utils.loadImageFromRes("BAS/BAS_" + itemMapIndex + ".png");
+        GameController newItemMap = new ItemMapController(0, -ItemMapController.HEIGHT_ITEM, image);
+        gameControllers.add(SUM_ITEM_MAP + 2, newItemMap);
+        itemMapIndex--;
     }
 
     private void addPowerUp() {
