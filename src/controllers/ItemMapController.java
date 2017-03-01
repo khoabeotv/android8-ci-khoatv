@@ -24,8 +24,4 @@ public class ItemMapController extends GameController {
     public void run() {
         ((ItemMapModel)model).move();
     }
-
-    public ItemMapModel getModel() {
-        return (ItemMapModel)model;
-    }
 }

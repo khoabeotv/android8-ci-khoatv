@@ -1,31 +1,31 @@
 package controllers;
 
+import models.PlayerBulletModel;
 import models.PlayerPlaneModel;
+import program.GameManager;
 import utils.Utils;
 import views.PlayerPlaneView;
-
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.util.BitSet;
-import java.util.List;
+
 
 /**
  * Created by KhoaBeo on 2/27/2017.
  */
-public class PlayerPlaneController extends GameController {
+public class PlayerPlaneController extends GameController implements Collision {
 
     private long lastShoot;
-    private List<PlayerBulletController> playerBullets;
 
-    public PlayerPlaneController(PlayerPlaneModel model, PlayerPlaneView view, List<PlayerBulletController> playerBullets) {
+    public PlayerPlaneController(PlayerPlaneModel model, PlayerPlaneView view) {
         super(view, model);
-        this.playerBullets = playerBullets;
+        CollisionController.instance.add(this);
     }
 
-    public PlayerPlaneController(int x, int y, Image image, List<PlayerBulletController> playerBullets) {
+    public PlayerPlaneController(int x, int y, Image image) {
         this(new PlayerPlaneModel(x, y, image.getWidth(null), image.getHeight(null)),
-                new PlayerPlaneView(image),
-                playerBullets);
+                new PlayerPlaneView(image)
+                );
     }
 
     @Override
@@ -45,23 +45,68 @@ public class PlayerPlaneController extends GameController {
         }
         if (model.getBitSet().get(KeyEvent.VK_NUMPAD0)) {
             long currentTime = System.currentTimeMillis();
-            if (currentTime - lastShoot > 100) {
-                addBullet();
+            if (currentTime - lastShoot > 200) {
+                shoot();
                 lastShoot = currentTime;
             }
         }
     }
 
-    private void addBullet() {
-        Image image = Utils.loadImageFromRes("bullet.png");
-        PlayerBulletController playerBullet = new PlayerBulletController(
-                (model.getWidth() - image.getWidth(null)) / 2 + model.getX(),
-                model.getY() - image.getHeight(null),
-                image);
-        playerBullets.add(playerBullet);
+    private void shoot() {
+        int bulletLevel = ((PlayerPlaneModel)model).getBulletLevel();
+        if (bulletLevel == 0) {
+            Image image = Utils.loadImageFromRes("bullet-single.png");
+            addBullet(
+                    model.getMidWidth() - image.getWidth(null) / 2,
+                    model.getY() - image.getHeight(null),
+                    image,
+                    PlayerBulletModel.UP
+            );
+            return;
+        }
+
+        if (bulletLevel > 0) {
+            Image image = Utils.loadImageFromRes("bullet-double.png");
+            addBullet(
+                    model.getMidWidth() - image.getWidth(null) / 2,
+                    model.getY() - image.getHeight(null),
+                    image,
+                    PlayerBulletModel.UP
+            );
+        }
+
+        if (bulletLevel > 1) {
+            Image image = Utils.loadImageFromRes("bullet-right.png");
+            addBullet(
+                    model.getX() - image.getWidth(null) / 2,
+                    model.getY() - image.getHeight(null),
+                    image,
+                    PlayerBulletModel.LEFT
+            );
+
+            image = Utils.loadImageFromRes("bullet-left.png");
+            addBullet(
+                    model.getX() + model.getWidth() - image.getWidth(null) / 2,
+                    model.getY() - image.getHeight(null),
+                    image,
+                    PlayerBulletModel.RIGHT
+            );
+        }
+    }
+
+    private void addBullet(int x, int y, Image image, String orient) {
+        GameController playerBullet = new PlayerBulletController(x, y, image, orient);
+        GameManager.gameControllers.add(playerBullet);
     }
 
     public BitSet getBitSet() {
         return ((PlayerPlaneModel)model).getBitSet();
+    }
+
+    @Override
+    public void collide(Collision other) {
+        if (other instanceof PowerUpController) {
+            ((PlayerPlaneModel)model).setBulletLevel();
+        }
     }
 }

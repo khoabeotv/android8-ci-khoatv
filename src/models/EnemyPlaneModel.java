@@ -1,6 +1,6 @@
 package models;
 
-import java.awt.*;
+import gui.GameFrame;
 
 /**
  * Created by KhoaBeo on 2/27/2017.
@@ -24,8 +24,12 @@ public class EnemyPlaneModel extends GameModel {
         this.dead = dead;
     }
 
-    public Rectangle getRect() {
-        return new Rectangle(x, y, width, height);
+    @Override
+    public boolean outScreen(){
+        if (y > GameFrame.HEIGHT_F || x < -width || x > GameFrame.WIDTH_F + width) {
+            return true;
+        }
+        return false;
     }
 
     public void move() {

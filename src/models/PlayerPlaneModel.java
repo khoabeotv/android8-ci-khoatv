@@ -14,10 +14,16 @@ public class PlayerPlaneModel extends GameModel {
 
     public static final int SPEED = 4;
     private BitSet bitSet;
+    private int bulletLevel;
 
     public PlayerPlaneModel(int x, int y, int width, int height) {
         super(x, y, width, height);
         bitSet = new BitSet();
+    }
+
+    @Override
+    public boolean outScreen() {
+        return false;
     }
 
     public BitSet getBitSet() {
@@ -58,5 +64,13 @@ public class PlayerPlaneModel extends GameModel {
 
             this.x = x;
             this.y = y;
+    }
+
+    public int getBulletLevel() {
+        return bulletLevel;
+    }
+
+    public void setBulletLevel() {
+        bulletLevel++;
     }
 }

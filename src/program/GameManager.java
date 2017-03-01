@@ -4,6 +4,7 @@ import com.sun.org.glassfish.gmbal.GmbalException;
 import controllers.*;
 import gui.GameFrame;
 import models.EnemyPlaneModel;
+import models.ItemMapModel;
 import utils.Utils;
 import views.EnemyPlaneView;
 
@@ -16,88 +17,54 @@ import java.util.List;
  * Created by KhoaBeo on 2/27/2017.
  */
 public class GameManager {
-    private PlayerPlaneController playerPlane;
-    private List<PlayerBulletController> playerBullets;
-    private List<EnemyPlaneController> enemyPlanes;
-    private List<EnemyBulletController> enemyBullets;
-    private List<ItemMapController> itemMaps;
+
+    public static final List<GameController> gameControllers = new ArrayList<>();
+
+    private GameController playerPlane;
     private long lastTimeAddEnemy;
     private long lastTimeAddItemMap;
+    private long lastTimeAddPowerUp;
 
     public GameManager() {
-
-        playerBullets = new ArrayList<>();
-        enemyBullets = new ArrayList<>();
-        enemyPlanes = new ArrayList<>();
-        itemMaps = new ArrayList<>();
-
         Image image = Utils.loadImageFromRes("plane1.png");
-        playerPlane = new PlayerPlaneController((GameFrame.WIDTH_F - image.getWidth(null)) / 2,
+        playerPlane = new PlayerPlaneController(
+                (GameFrame.WIDTH_F - image.getWidth(null)) / 2,
                 GameFrame.HEIGHT_F - image.getHeight(null) - 50,
-                image,
-                playerBullets);
+                image
+        );
 
         Image background = Utils.loadImageFromRes("background.png");
-        ItemMapController backgroundOne = new ItemMapController(0, 0, background);
-        ItemMapController backgroundTwo = new ItemMapController(0, -background.getHeight(null), background);
-        itemMaps.add(backgroundOne);
-        itemMaps.add(backgroundTwo);
+        GameController backgroundOne = new ItemMapController(0, 0, background);
+        GameController backgroundTwo = new ItemMapController(0, -background.getHeight(null), background);
+
+        gameControllers.add(backgroundOne);
+        gameControllers.add(backgroundTwo);
+        gameControllers.add(playerPlane);
     }
 
     public void draw(Graphics2D g2d) {
-        //Draw map
-        for (int i = 0; i < itemMaps.size(); i++) {
-            ItemMapController itemMap = itemMaps.get(i);
-
-            if (i < 2 && itemMap.getModel().getY() == GameFrame.HEIGHT_F) {
-                itemMap.getModel().setY(-itemMap.getModel().getHeight());
-            }
-
-            if (itemMap.getModel().getY() > GameFrame.HEIGHT_F) {
-                itemMaps.remove(itemMap);
-            }
-
-            itemMap.run();
-            itemMap.draw(g2d);
-        }
-
-        //Draw player
-        for (int i = 0; i < playerBullets.size(); i++) {
-            PlayerBulletController playerBullet = playerBullets.get(i);
-
-            if (playerBullet.getModel().getY() < 0) {
-                playerBullets.remove(i);
-            }
-
-            playerBullet.run();
-            playerBullet.draw(g2d);
-        }
-        playerPlane.draw(g2d);
-
-        //Draw enemies
-        for (int i = 0; i < enemyPlanes.size(); i++) {
-            EnemyPlaneController enemyPlane = enemyPlanes.get(i);
-            if (!enemyPlane.run(playerBullets) || enemyPlane.getModel().getX() > GameFrame.HEIGHT_F)  {
-                enemyPlanes.remove(i);
-            }
-            enemyPlane.draw(g2d);
-        }
-        for (int i = 0; i < enemyBullets.size(); i++) {
-            EnemyBulletController enemyBullet = enemyBullets.get(i);
-
-            if (enemyBullet.getModel().getY() > GameFrame.HEIGHT_F) {
-                enemyBullets.remove(i);
-            }
-
-            enemyBullet.run();
-            enemyBullet.draw(g2d);
+        for (int i = 0; i < gameControllers.size(); i++) {
+            gameControllers.get(i).draw(g2d);
         }
     }
 
     public void run() {
-        playerPlane.run();
-        addEnemy();
+        for (int i = 0; i < gameControllers.size(); i++) {
+            GameController gameController = gameControllers.get(i);
+            gameController.run();
+            if (gameController.outScreen() && i > 1) {
+                if (gameController instanceof Collision) {
+                    Utils.gameRemove(gameController);
+                } else {
+                    gameControllers.remove(gameController);
+                }
+            }
+        }
+        setBackground();
         addItemMap();
+        addEnemy();
+        addPowerUp();
+        CollisionController.instance.checkCollide();
     }
 
     private void addEnemy() {
@@ -106,17 +73,17 @@ public class GameManager {
             Random rd = new Random();
             int x = rd.nextInt(GameFrame.WIDTH_F + 200) - 100;
             if (x < 0) {
-                Image image =  Utils.loadImageFromRes("enemy-green-1.png");
-                EnemyPlaneController enemyPlane = new EnemyPlaneController(x, -50, image, "RIGHT", enemyBullets);
-                enemyPlanes.add(enemyPlane);
+                Image image = Utils.loadImageFromRes("enemy-green-1.png");
+                GameController enemyPlane = new EnemyPlaneController(x, -50, image, "RIGHT");
+                gameControllers.add(enemyPlane);
             } else if (x > GameFrame.WIDTH_F) {
-                Image image =  Utils.loadImageFromRes("enemy-green-2.png");
-                EnemyPlaneController enemyPlane = new EnemyPlaneController(x, -50, image, "LEFT", enemyBullets);
-                enemyPlanes.add(enemyPlane);
+                Image image = Utils.loadImageFromRes("enemy-green-2.png");
+                GameController enemyPlane = new EnemyPlaneController(x, -50, image, "LEFT");
+                gameControllers.add(enemyPlane);
             } else {
-                Image image =  Utils.loadImageFromRes("enemy-green-3.png");
-                EnemyPlaneController enemyPlane = new EnemyPlaneController(x, -50, image, "DOWN", enemyBullets);
-                enemyPlanes.add(enemyPlane);
+                Image image = Utils.loadImageFromRes("enemy-green-3.png");
+                GameController enemyPlane = new EnemyPlaneController(x, -50, image, "DOWN");
+                gameControllers.add(enemyPlane);
             }
             lastTimeAddEnemy = currentTime;
         }
@@ -127,13 +94,34 @@ public class GameManager {
         if (currentTime - lastTimeAddItemMap > 10000) {
             Random rd = new Random();
             int x = rd.nextInt(GameFrame.WIDTH_F - 100);
-            ItemMapController itemMap = new ItemMapController(x, -50, Utils.loadImageFromRes("island-"  + rd.nextInt(2) + ".png"));
-            itemMaps.add(itemMap);
+            GameController itemMap = new ItemMapController(x, -50, Utils.loadImageFromRes("island-" + rd.nextInt(2) + ".png"));
+            gameControllers.add(2, itemMap);
             lastTimeAddItemMap = currentTime;
         }
     }
 
+    private void addPowerUp() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastTimeAddPowerUp > 10000) {
+            Random rd = new Random();
+            int x = rd.nextInt(GameFrame.WIDTH_F - 100);
+            GameController itemMap = new PowerUpController(x, -50, Utils.loadImageFromRes("power-up.png"));
+            gameControllers.add(itemMap);
+            lastTimeAddPowerUp = currentTime;
+        }
+    }
+
+    private void setBackground() {
+        ItemMapController backgroundOne = (ItemMapController) gameControllers.get(0);
+        ItemMapController backgroundTwo = (ItemMapController) gameControllers.get(1);
+        if (backgroundOne.getModel().getY() == 0) {
+            ((ItemMapModel) backgroundTwo.getModel()).setY(-backgroundTwo.getModel().getHeight());
+        } else if (backgroundTwo.getModel().getY() == 0) {
+            ((ItemMapModel) backgroundOne.getModel()).setY(-backgroundOne.getModel().getHeight());
+        }
+    }
+
     public BitSet getBitSet() {
-        return playerPlane.getBitSet();
+        return ((PlayerPlaneController) playerPlane).getBitSet();
     }
 }

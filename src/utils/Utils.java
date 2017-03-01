@@ -1,5 +1,10 @@
 package utils;
 
+import controllers.Collision;
+import controllers.CollisionController;
+import controllers.GameController;
+import program.GameManager;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
@@ -17,5 +22,10 @@ public class Utils {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static void gameRemove(GameController gameController) {
+        GameManager.gameControllers.remove(gameController);
+        CollisionController.instance.remove((Collision) gameController);
     }
 }

@@ -3,13 +3,13 @@ package models;
 import gui.GameFrame;
 
 /**
- * Created by KhoaBeo on 2/27/2017.
+ * Created by KhoaBeo on 3/1/2017.
  */
-public class EnemyBulletModel extends GameModel {
+public class PowerUpModel extends GameModel {
 
-    public static final int SPEED = 5;
+    public static final int SPEED = 2;
 
-    public EnemyBulletModel(int x, int y, int width, int height) {
+    public PowerUpModel(int x, int y, int width, int height) {
         super(x, y, width, height);
     }
 
@@ -21,7 +21,7 @@ public class EnemyBulletModel extends GameModel {
         return false;
     }
 
-    public void fly() {
+    public void move() {
         y += SPEED;
     }
 }

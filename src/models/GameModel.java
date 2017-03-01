@@ -1,9 +1,13 @@
 package models;
 
+import gui.GameFrame;
+
+import java.awt.*;
+
 /**
  * Created by KhoaBeo on 2/28/2017.
  */
-public class GameModel {
+public abstract class GameModel {
 
     protected int x;
     protected int y;
@@ -32,4 +36,16 @@ public class GameModel {
     public int getHeight() {
         return height;
     }
+
+    public int getMidWidth() {
+        return width / 2 + x;
+    }
+
+    public boolean intersects(GameModel other) {
+        Rectangle rect1 = new Rectangle(x, y, width, height);
+        Rectangle rect2 = new Rectangle(other.x, other.y, other.width, other.height);
+        return rect1.intersects(rect2);
+    }
+
+    public abstract boolean outScreen();
 }
