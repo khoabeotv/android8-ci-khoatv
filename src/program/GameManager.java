@@ -20,6 +20,8 @@ public class GameManager {
 
     public static final List<GameController> gameControllers = new ArrayList<>();
     public static final int SUM_ITEM_MAP = GameFrame.HEIGHT_F / ItemMapController.HEIGHT_ITEM;
+    public static final int DELAY_ADD_ENEMY = 700;
+    public static final int DELAY_ADD_POWER_UP = 10000;
 
     private GameController playerPlane;
     private long lastTimeAddEnemy;
@@ -78,7 +80,7 @@ public class GameManager {
 
     private void addEnemy() {
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastTimeAddEnemy > 700) {
+        if (currentTime - lastTimeAddEnemy > DELAY_ADD_ENEMY) {
             Random rd = new Random();
             int x = rd.nextInt(GameFrame.WIDTH_F + 200) - 100;
             if (x < 0) {
@@ -109,7 +111,7 @@ public class GameManager {
 
     private void addPowerUp() {
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastTimeAddPowerUp > 10000) {
+        if (currentTime - lastTimeAddPowerUp > DELAY_ADD_POWER_UP) {
             Random rd = new Random();
             int x = rd.nextInt(GameFrame.WIDTH_F - 100);
             GameController itemMap = new PowerUpController(x, -50, Utils.loadImageFromRes("power-up.png"));

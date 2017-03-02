@@ -15,6 +15,7 @@ import java.util.BitSet;
  */
 public class PlayerPlaneController extends GameController implements Collision {
 
+    public static final int DELAY_ADD_ROCKET = 1000;
     private long lastShoot;
     private long lastTimeAddRocket;
 
@@ -103,7 +104,7 @@ public class PlayerPlaneController extends GameController implements Collision {
 
     private void addRocket() {
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastTimeAddRocket > 1000) {
+        if (currentTime - lastTimeAddRocket > DELAY_ADD_ROCKET) {
             if (((PlayerPlaneModel) model).getBulletLevel() > 2) {
                 GameController playerRocket = new PlayerRocketController(
                         model.getMidWidth() - Utils.loadImageFromRes("rocket-0.png").getWidth(null) / 2,

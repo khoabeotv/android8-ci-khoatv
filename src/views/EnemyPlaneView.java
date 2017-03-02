@@ -12,22 +12,19 @@ import java.awt.*;
  */
 public class EnemyPlaneView extends GameView {
 
-    private long lastTimeExpl;
-    private int index;
+    private Animation explosion;
 
     public EnemyPlaneView(Image image) {
         super(image);
+        explosion = new Animation(15, 100, "expl");
     }
 
     public boolean explode() {
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - lastTimeExpl > 100) {
-            image = Utils.loadImageFromRes("expl-" + index + ".png");
-            if(++index == 14) {
-                return false;
-            }
-            lastTimeExpl = currentTime;
+        Image temp = explosion.getImage();
+        if (temp != null) {
+            image = temp;
+            return true;
         }
-        return true;
+        return false;
     }
 }

@@ -7,6 +7,8 @@ import utils.Utils;
 import views.GameView;
 import views.PlayerRocketView;
 
+import java.awt.*;
+
 /**
  * Created by KhoaBeo on 3/2/2017.
  */
@@ -27,8 +29,8 @@ public class PlayerRocketController extends GameController implements Collision{
 
     @Override
     public void run() {
-        ((PlayerRocketView)view).setImage();
         ((PlayerRocketModel)model).move();
+        ((PlayerRocketView)view).setImage();
     }
 
     @Override

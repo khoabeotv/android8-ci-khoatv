@@ -9,23 +9,22 @@ import java.awt.*;
  */
 public class PlayerRocketView extends GameView {
 
-    private int index;
-    private long lastTime;
-    private String rocketName;
+    private Animation animation;
 
     public PlayerRocketView(String rocketName) {
         super(Utils.loadImageFromRes(rocketName + "-0.png"));
-        this.rocketName = rocketName;
+        animation = new Animation(4, 200, rocketName);
     }
 
     public void setImage() {
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - lastTime > 200) {
-            if (index > 1) {
-                index = 0;
-            }
-            image = Utils.loadImageFromRes(rocketName + "-" + index++ + ".png");
-            lastTime = currentTime;
-        }
+       if (animation.getImage() != null) {
+           image = animation.getImage();
+       } else {
+           animation.reload();
+       }
+    }
+
+    public Image getImage() {
+        return image;
     }
 }

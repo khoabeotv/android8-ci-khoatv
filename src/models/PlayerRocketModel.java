@@ -9,7 +9,7 @@ import program.GameManager;
  */
 public class PlayerRocketModel extends GameModel {
 
-    public static final int SPEED = 2;
+    public static final int SPEED = 5;
 
     private GameController enemyPlane;
 
@@ -25,20 +25,23 @@ public class PlayerRocketModel extends GameModel {
 
     @Override
     public boolean outScreen() {
+        if (x < -height) {
+            return true;
+        }
         return false;
     }
 
     public void move() {
-        if (GameManager.gameControllers.contains(enemyPlane) && !((EnemyPlaneModel)enemyPlane.getModel()).isDead()) {
-            if (x > enemyPlane.getModel().x) {
+        if (GameManager.gameControllers.contains(enemyPlane) && !((EnemyPlaneModel) enemyPlane.getModel()).isDead()) {
+            if (x - 10 > enemyPlane.getModel().x) {
                 x -= SPEED;
-            } else if (x < enemyPlane.getModel().x){
+            } else if (x + 10 < enemyPlane.getModel().x) {
                 x += SPEED;
             }
 
             if (y > enemyPlane.getModel().y) {
                 y -= SPEED;
-            } else if (y < enemyPlane.getModel().y){
+            } else if (y < enemyPlane.getModel().y) {
                 y += SPEED;
             }
         } else {
