@@ -4,6 +4,8 @@ import models.EnemyPlaneModel;
 import program.GameManager;
 import utils.Utils;
 import views.EnemyPlaneView;
+import views.EnemyWhiteView;
+
 import java.awt.Image;
 
 
@@ -19,12 +21,14 @@ public class EnemyPlaneController extends GameController implements Collision {
         CollisionController.instance.add(this);
     }
 
-    public EnemyPlaneController(int x, int y, Image image, String orient) {
+    public EnemyPlaneController(int x, int y, Image image, String orient, int hp) {
         this(new EnemyPlaneModel(
                         x,
                         y,
                         image.getWidth(null),
-                        image.getHeight(null), orient),
+                        image.getHeight(null),
+                        orient,
+                        hp),
                 new EnemyPlaneView(image)
         );
     }
@@ -35,8 +39,11 @@ public class EnemyPlaneController extends GameController implements Collision {
         if (!model.isDead()) {
             shoot();
             model.move();
+            if (view instanceof EnemyWhiteView) {
+                ((EnemyWhiteView) view).setImage();
+            }
         } else if (!((EnemyPlaneView) view).explode()) {
-            Utils.gameRemove(this);
+            GameManager.gameControllers.remove(this);
         }
     }
 
@@ -54,9 +61,14 @@ public class EnemyPlaneController extends GameController implements Collision {
     }
 
     @Override
-    public void collide(Collision model) {
-        if (model instanceof PlayerBulletController || model instanceof PlayerRocketController) {
-            ((EnemyPlaneModel) this.model).setDead(true);
+    public void collide(Collision other) {
+        if (other instanceof PlayerBulletController || other instanceof PlayerRocketController) {
+            EnemyPlaneModel model = (EnemyPlaneModel) this.model;
+            model.setHp(model.getHp() - 1);
+            if (model.getHp() == 0) {
+                model.setDead(true);
+                CollisionController.instance.remove(this);
+            }
         }
     }
 }

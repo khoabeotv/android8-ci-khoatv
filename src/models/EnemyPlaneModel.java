@@ -9,11 +9,13 @@ public class EnemyPlaneModel extends GameModel {
 
     public static final int SPEED = 2;
     private String orient;
+    private int hp;
     private boolean dead;
 
-    public EnemyPlaneModel(int x, int y, int width, int height, String orient) {
+    public EnemyPlaneModel(int x, int y, int width, int height, String orient, int hp) {
         super(x, y, width, height);
         this.orient = orient;
+        this.hp = hp;
     }
 
     public boolean isDead() {
@@ -22,6 +24,14 @@ public class EnemyPlaneModel extends GameModel {
 
     public void setDead(boolean dead) {
         this.dead = dead;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
     }
 
     @Override

@@ -23,8 +23,4 @@ public class PlayerRocketView extends GameView {
            animation.reload();
        }
     }
-
-    public Image getImage() {
-        return image;
-    }
 }

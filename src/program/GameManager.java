@@ -7,6 +7,7 @@ import models.EnemyPlaneModel;
 import models.ItemMapModel;
 import utils.Utils;
 import views.EnemyPlaneView;
+import views.EnemyWhiteView;
 
 import java.awt.*;
 import java.util.*;
@@ -85,17 +86,23 @@ public class GameManager {
             int x = rd.nextInt(GameFrame.WIDTH_F + 200) - 100;
             if (x < 0) {
                 Image image = Utils.loadImageFromRes("enemy-green-1.png");
-                GameController enemyPlane = new EnemyPlaneController(x, -50, image, "RIGHT");
+                GameController enemyPlane = new EnemyPlaneController(x, -50, image, "RIGHT", 1);
                 gameControllers.add(enemyPlane);
             } else if (x > GameFrame.WIDTH_F) {
                 Image image = Utils.loadImageFromRes("enemy-green-2.png");
-                GameController enemyPlane = new EnemyPlaneController(x, -50, image, "LEFT");
+                GameController enemyPlane = new EnemyPlaneController(x, -50, image, "LEFT", 1);
                 gameControllers.add(enemyPlane);
+
+                GameController enemyWhite = new EnemyPlaneController(
+                        new EnemyPlaneModel(rd.nextInt(GameFrame.WIDTH_F), -50, 32, 32, "DOWN", 5),
+                        new EnemyWhiteView("enemy_plane_white"));
+                gameControllers.add(enemyWhite);
             } else {
                 Image image = Utils.loadImageFromRes("enemy-green-3.png");
-                GameController enemyPlane = new EnemyPlaneController(x, -50, image, "DOWN");
+                GameController enemyPlane = new EnemyPlaneController(x, -50, image, "DOWN", 1);
                 gameControllers.add(enemyPlane);
             }
+
             lastTimeAddEnemy = currentTime;
         }
     }
