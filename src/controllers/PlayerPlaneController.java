@@ -33,26 +33,36 @@ public class PlayerPlaneController extends GameController implements Collision {
     @Override
     public void run() {
         PlayerPlaneModel model = (PlayerPlaneModel) this.model;
-        if (model.getBitSet().get(KeyEvent.VK_UP)) {
-            model.move("UP");
-        }
-        if (model.getBitSet().get(KeyEvent.VK_DOWN)) {
-            model.move("DOWN");
-        }
-        if (model.getBitSet().get(KeyEvent.VK_LEFT)) {
-            model.move("LEFT");
-        }
-        if (model.getBitSet().get(KeyEvent.VK_RIGHT)) {
-            model.move("RIGHT");
-        }
-        if (model.getBitSet().get(KeyEvent.VK_NUMPAD0)) {
-            long currentTime = System.currentTimeMillis();
-            if (currentTime - lastShoot > 200) {
-                shoot();
-                lastShoot = currentTime;
+
+        if (!model.isDead()) {
+            if (model.getBitSet().get(KeyEvent.VK_UP)) {
+                model.move("UP");
+            }
+            if (model.getBitSet().get(KeyEvent.VK_DOWN)) {
+                model.move("DOWN");
+            }
+            if (model.getBitSet().get(KeyEvent.VK_LEFT)) {
+                model.move("LEFT");
+            }
+            if (model.getBitSet().get(KeyEvent.VK_RIGHT)) {
+                model.move("RIGHT");
+            }
+            if (model.getBitSet().get(KeyEvent.VK_NUMPAD0)) {
+                long currentTime = System.currentTimeMillis();
+                if (currentTime - lastShoot > 200) {
+                    shoot();
+                    lastShoot = currentTime;
+                }
+            }
+            addRocket();
+        } else if (!((PlayerPlaneView)view).explode()) {
+            if (model.getTurn() > 0) {
+                model.setDead(false);
+                CollisionController.instance.add(this);
+            } else {
+                GameManager.gameControllers.remove(this);
             }
         }
-        addRocket();
     }
 
     private void shoot() {
@@ -123,8 +133,16 @@ public class PlayerPlaneController extends GameController implements Collision {
 
     @Override
     public void collide(Collision other) {
+        PlayerPlaneModel model = (PlayerPlaneModel)this.model;
         if (other instanceof PowerUpController) {
-            ((PlayerPlaneModel)model).setBulletLevel();
+            model.upBulletLevel();
+        }
+
+        if (other instanceof EnemyBulletController) {
+            CollisionController.instance.remove(this);
+            model.setDead(true);
+            model.downBulletLevel();
+            model.setTurn();
         }
     }
 }

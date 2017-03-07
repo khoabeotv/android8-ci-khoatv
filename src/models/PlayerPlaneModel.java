@@ -1,10 +1,6 @@
 package models;
 
-import controllers.PlayerBulletController;
 import gui.GameFrame;
-import views.PlayerPlaneView;
-
-import java.util.ArrayList;
 import java.util.BitSet;
 
 /**
@@ -15,10 +11,13 @@ public class PlayerPlaneModel extends GameModel {
     public static final int SPEED = 4;
     private BitSet bitSet;
     private int bulletLevel;
+    private int turn;
+    private boolean dead;
 
     public PlayerPlaneModel(int x, int y, int width, int height) {
         super(x, y, width, height);
         bitSet = new BitSet();
+        turn = 3;
     }
 
     @Override
@@ -70,7 +69,27 @@ public class PlayerPlaneModel extends GameModel {
         return bulletLevel;
     }
 
-    public void setBulletLevel() {
+    public void upBulletLevel() {
         bulletLevel++;
+    }
+
+    public void downBulletLevel() {
+        bulletLevel = 0;
+    }
+
+    public int getTurn() {
+        return turn;
+    }
+
+    public void setTurn() {
+        turn--;
+    }
+
+    public boolean isDead() {
+        return dead;
+    }
+
+    public void setDead(boolean dead) {
+        this.dead = dead;
     }
 }

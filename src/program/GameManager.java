@@ -1,14 +1,11 @@
 package program;
 
-import com.sun.org.glassfish.gmbal.GmbalException;
 import controllers.*;
 import gui.GameFrame;
 import models.EnemyPlaneModel;
 import models.ItemMapModel;
 import utils.Utils;
-import views.EnemyPlaneView;
 import views.EnemyWhiteView;
-
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -21,7 +18,7 @@ public class GameManager {
 
     public static final List<GameController> gameControllers = new ArrayList<>();
     public static final int SUM_ITEM_MAP = GameFrame.HEIGHT_F / ItemMapController.HEIGHT_ITEM;
-    public static final int DELAY_ADD_ENEMY = 700;
+    public static final int DELAY_ADD_ENEMY = 1500;
     public static final int DELAY_ADD_POWER_UP = 10000;
 
     private GameController playerPlane;

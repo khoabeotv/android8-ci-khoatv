@@ -15,6 +15,7 @@ public class EnemyBulletController extends GameController implements Collision {
 
     public EnemyBulletController(EnemyBulletModel model, EnemyBulletView view) {
         super(view, model);
+        CollisionController.instance.add(this);
     }
 
     public EnemyBulletController(int x, int y, Image image) {
@@ -29,6 +30,8 @@ public class EnemyBulletController extends GameController implements Collision {
 
     @Override
     public void collide(Collision other) {
-
+        if (other instanceof PlayerPlaneController) {
+            Utils.gameRemove(this);
+        }
     }
 }

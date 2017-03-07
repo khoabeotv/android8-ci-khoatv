@@ -14,6 +14,8 @@ import java.awt.Image;
  */
 public class EnemyPlaneController extends GameController implements Collision {
 
+    public static final int DELAY_SHOOT = 3000;
+
     private long lastTimeAddBullet;
 
     public EnemyPlaneController(EnemyPlaneModel model, EnemyPlaneView view) {
@@ -49,7 +51,7 @@ public class EnemyPlaneController extends GameController implements Collision {
 
     private void shoot() {
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastTimeAddBullet > 1000) {
+        if (currentTime - lastTimeAddBullet > DELAY_SHOOT) {
             Image image = Utils.loadImageFromRes("bullet-round.png");
             GameController enemyBullet = new EnemyBulletController(
                     (model.getWidth() - image.getWidth(null)) / 2 + model.getX(),

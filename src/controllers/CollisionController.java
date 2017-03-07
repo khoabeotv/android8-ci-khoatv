@@ -30,7 +30,7 @@ public class CollisionController {
         for (int i = 0; i < collisionList.size() - 1; i++) {
             Collision collisionI = collisionList.get(i);
             GameModel modelI = collisionI.getModel();
-            for (int j = i; j < collisionList.size(); j++) {
+            for (int j = i + 1; j < collisionList.size(); j++) {
                 Collision collisionJ = collisionList.get(j);
                 GameModel modelJ = collisionJ.getModel();
 
