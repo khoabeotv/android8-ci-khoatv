@@ -1,5 +1,6 @@
 package controllers;
 
+import collision.Collision;
 import models.PlayerBulletModel;
 import models.PlayerPlaneModel;
 import program.GameManager;

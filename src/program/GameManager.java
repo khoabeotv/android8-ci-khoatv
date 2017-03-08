@@ -1,11 +1,16 @@
 package program;
 
+import collision.Collision;
 import controllers.*;
+import controllers.strategies.MoveDownBehavior;
+import controllers.strategies.MoveDownLeftBehavior;
+import controllers.strategies.MoveDownRightBehavior;
 import gui.GameFrame;
 import models.EnemyPlaneModel;
 import models.ItemMapModel;
 import utils.Utils;
 import views.EnemyWhiteView;
+
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -18,7 +23,7 @@ public class GameManager {
 
     public static final List<GameController> gameControllers = new ArrayList<>();
     public static final int SUM_ITEM_MAP = GameFrame.HEIGHT_F / ItemMapController.HEIGHT_ITEM;
-    public static final int DELAY_ADD_ENEMY = 1500;
+    public static final int DELAY_ADD_ENEMY = 1000;
     public static final int DELAY_ADD_POWER_UP = 10000;
 
     private GameController playerPlane;
@@ -80,26 +85,29 @@ public class GameManager {
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastTimeAddEnemy > DELAY_ADD_ENEMY) {
             Random rd = new Random();
+            EnemyController enemyPlane;
             int x = rd.nextInt(GameFrame.WIDTH_F + 200) - 100;
             if (x < 0) {
                 Image image = Utils.loadImageFromRes("enemy-green-1.png");
-                GameController enemyPlane = new EnemyPlaneController(x, -50, image, "RIGHT", 1);
-                gameControllers.add(enemyPlane);
+                enemyPlane = new EnemyController(x, -50, image, 1);
+                enemyPlane.setMoveBehavior(new MoveDownRightBehavior());
             } else if (x > GameFrame.WIDTH_F) {
                 Image image = Utils.loadImageFromRes("enemy-green-2.png");
-                GameController enemyPlane = new EnemyPlaneController(x, -50, image, "LEFT", 1);
-                gameControllers.add(enemyPlane);
-
-                GameController enemyWhite = new EnemyPlaneController(
-                        new EnemyPlaneModel(rd.nextInt(GameFrame.WIDTH_F), -50, 32, 32, "DOWN", 5),
-                        new EnemyWhiteView("enemy_plane_white"));
-                gameControllers.add(enemyWhite);
+                enemyPlane = new EnemyController(x, -50, image, 1);
+                enemyPlane.setMoveBehavior(new MoveDownLeftBehavior());
             } else {
-                Image image = Utils.loadImageFromRes("enemy-green-3.png");
-                GameController enemyPlane = new EnemyPlaneController(x, -50, image, "DOWN", 1);
-                gameControllers.add(enemyPlane);
+                if (x % 2 == 0) {
+                    Image image = Utils.loadImageFromRes("enemy-green-3.png");
+                    enemyPlane = new EnemyController(x, -50, image, 1);
+                } else {
+                    enemyPlane = new EnemyController(
+                            new EnemyPlaneModel(rd.nextInt(GameFrame.WIDTH_F), -50, 32, 32, 3),
+                            new EnemyWhiteView("enemy_plane_white")
+                    );
+                }
+                enemyPlane.setMoveBehavior(new MoveDownBehavior());
             }
-
+            gameControllers.add(enemyPlane);
             lastTimeAddEnemy = currentTime;
         }
     }

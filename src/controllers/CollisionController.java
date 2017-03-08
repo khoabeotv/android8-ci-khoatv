@@ -1,5 +1,6 @@
 package controllers;
 
+import collision.Collision;
 import models.GameModel;
 
 import java.util.ArrayList;

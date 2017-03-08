@@ -1,5 +1,7 @@
 package views;
 
+import models.EnemyPlaneModel;
+import models.GameModel;
 import utils.Utils;
 
 import java.awt.*;
@@ -14,6 +16,13 @@ public class EnemyWhiteView extends EnemyPlaneView {
     public EnemyWhiteView(String url) {
         super(Utils.loadImageFromRes(url + "-1.png"));
         animation = new Animation(3, 200, url);
+    }
+
+    @Override
+    public void draw(Graphics2D g2d, GameModel model) {
+        if (!((EnemyPlaneModel) model).isDead())
+            setImage();
+        super.draw(g2d, model);
     }
 
     public void setImage() {

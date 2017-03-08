@@ -1,8 +1,7 @@
 package controllers;
 
+import collision.Collision;
 import models.EnemyBulletModel;
-import models.GameModel;
-import program.GameManager;
 import utils.Utils;
 import views.EnemyBulletView;
 

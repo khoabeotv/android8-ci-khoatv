@@ -8,15 +8,15 @@ import javax.swing.*;
 public class GameFrame extends JFrame {
     public static final int WIDTH_F = 500;
     public static final int HEIGHT_F = 700;
-    private GamePanel gamePanel;
+    public static MainPanel mainPanel;
 
     public GameFrame() {
         setSize(WIDTH_F, HEIGHT_F);
         setLocationRelativeTo(null);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        gamePanel = new GamePanel();
-        add(gamePanel);
+        mainPanel = new MainPanel();
+        add(mainPanel);
         setVisible(true);
     }
 }

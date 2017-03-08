@@ -8,13 +8,11 @@ import gui.GameFrame;
 public class EnemyPlaneModel extends GameModel {
 
     public static final int SPEED = 2;
-    private String orient;
     private int hp;
     private boolean dead;
 
-    public EnemyPlaneModel(int x, int y, int width, int height, String orient, int hp) {
+    public EnemyPlaneModel(int x, int y, int width, int height, int hp) {
         super(x, y, width, height);
-        this.orient = orient;
         this.hp = hp;
     }
 
@@ -42,21 +40,8 @@ public class EnemyPlaneModel extends GameModel {
         return false;
     }
 
-    public void move() {
-        switch (orient) {
-            case "DOWN":
-                y += SPEED;
-                break;
-            case "LEFT":
-                y += SPEED;
-                x -= SPEED;
-                break;
-            case "RIGHT":
-                y += SPEED;
-                x += SPEED;
-                break;
-            default:
-                break;
-        }
+    public void move(int dx, int dy) {
+        x += dx * SPEED;
+        y += dy * SPEED;
     }
 }

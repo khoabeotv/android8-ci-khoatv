@@ -1,10 +1,11 @@
 package controllers;
 
+import collision.Collision;
+import controllers.strategies.MoveBehavior;
 import models.EnemyPlaneModel;
 import program.GameManager;
 import utils.Utils;
 import views.EnemyPlaneView;
-import views.EnemyWhiteView;
 
 import java.awt.Image;
 
@@ -12,24 +13,24 @@ import java.awt.Image;
 /**
  * Created by KhoaBeo on 2/27/2017.
  */
-public class EnemyPlaneController extends GameController implements Collision {
+public class EnemyController extends GameController implements Collision {
 
     public static final int DELAY_SHOOT = 3000;
 
     private long lastTimeAddBullet;
+    private MoveBehavior moveBehavior;
 
-    public EnemyPlaneController(EnemyPlaneModel model, EnemyPlaneView view) {
+    public EnemyController(EnemyPlaneModel model, EnemyPlaneView view) {
         super(view, model);
         CollisionController.instance.add(this);
     }
 
-    public EnemyPlaneController(int x, int y, Image image, String orient, int hp) {
+    public EnemyController(int x, int y, Image image, int hp) {
         this(new EnemyPlaneModel(
                         x,
                         y,
                         image.getWidth(null),
                         image.getHeight(null),
-                        orient,
                         hp),
                 new EnemyPlaneView(image)
         );
@@ -40,10 +41,7 @@ public class EnemyPlaneController extends GameController implements Collision {
         EnemyPlaneModel model = (EnemyPlaneModel) this.model;
         if (!model.isDead()) {
             shoot();
-            model.move();
-            if (view instanceof EnemyWhiteView) {
-                ((EnemyWhiteView) view).setImage();
-            }
+            moveBehavior.move(model);
         } else if (!((EnemyPlaneView) view).explode()) {
             GameManager.gameControllers.remove(this);
         }
@@ -72,5 +70,9 @@ public class EnemyPlaneController extends GameController implements Collision {
                 CollisionController.instance.remove(this);
             }
         }
+    }
+
+    public void setMoveBehavior(MoveBehavior moveBehavior) {
+        this.moveBehavior = moveBehavior;
     }
 }

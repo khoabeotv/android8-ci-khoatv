@@ -1,6 +1,6 @@
 package utils;
 
-import controllers.Collision;
+import collision.Collision;
 import controllers.CollisionController;
 import controllers.GameController;
 import program.GameManager;

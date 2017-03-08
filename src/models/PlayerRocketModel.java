@@ -1,6 +1,6 @@
 package models;
 
-import controllers.EnemyPlaneController;
+import controllers.EnemyController;
 import controllers.GameController;
 import program.GameManager;
 
@@ -17,7 +17,7 @@ public class PlayerRocketModel extends GameModel {
         super(x, y, width, height);
         for (int i = 0; i < GameManager.gameControllers.size(); i++) {
             GameController gameController = GameManager.gameControllers.get(i);
-            if (gameController instanceof EnemyPlaneController) {
+            if (gameController instanceof EnemyController) {
                 enemyPlane = gameController;
             }
         }

@@ -1,4 +1,4 @@
-package controllers;
+package collision;
 
 import models.GameModel;
 

@@ -1,5 +1,6 @@
 package controllers;
 
+import collision.Collision;
 import models.EnemyPlaneModel;
 import models.GameModel;
 import models.PlayerRocketModel;
@@ -7,12 +8,10 @@ import utils.Utils;
 import views.GameView;
 import views.PlayerRocketView;
 
-import java.awt.*;
-
 /**
  * Created by KhoaBeo on 3/2/2017.
  */
-public class PlayerRocketController extends GameController implements Collision{
+public class PlayerRocketController extends GameController implements Collision {
 
     public PlayerRocketController(GameView view, GameModel model) {
         super(view, model);
@@ -35,7 +34,7 @@ public class PlayerRocketController extends GameController implements Collision{
 
     @Override
     public void collide(Collision other) {
-        if (other instanceof EnemyPlaneController) {
+        if (other instanceof EnemyController) {
             if (!(((EnemyPlaneModel)other.getModel()).isDead())) {
                 Utils.gameRemove(this);
             }

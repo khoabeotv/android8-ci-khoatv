@@ -1,6 +1,7 @@
 package controllers;
 
 
+import collision.Collision;
 import models.GameModel;
 import models.PowerUpModel;
 import utils.Utils;
