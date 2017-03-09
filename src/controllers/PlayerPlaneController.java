@@ -1,6 +1,9 @@
 package controllers;
 
 import collision.Collision;
+import gui.GameFrame;
+import gui.GamePanel;
+import gui.MainPanel;
 import models.PlayerBulletModel;
 import models.PlayerPlaneModel;
 import program.GameManager;
@@ -62,6 +65,8 @@ public class PlayerPlaneController extends GameController implements Collision {
                 CollisionController.instance.add(this);
             } else {
                 GameManager.gameControllers.remove(this);
+                GamePanel.setRunning(false);
+                GameFrame.mainPanel.showPanel(MainPanel.TAG_GAME_OVER);
             }
         }
     }
@@ -126,10 +131,6 @@ public class PlayerPlaneController extends GameController implements Collision {
             }
             lastTimeAddRocket = currentTime;
         }
-    }
-
-    public BitSet getBitSet() {
-        return ((PlayerPlaneModel)model).getBitSet();
     }
 
     @Override

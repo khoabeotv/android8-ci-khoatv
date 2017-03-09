@@ -14,7 +14,7 @@ import java.awt.event.KeyListener;
 public class GamePanel extends JPanel implements Runnable, KeyListener {
 
     private Thread thread;
-    private boolean isRunning;
+    private static boolean isRunning;
     private GameManager gameManager;
 
     public GamePanel() {
@@ -57,11 +57,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
     @Override
     public void keyPressed(KeyEvent keyEvent) {
-        gameManager.getBitSet().set(keyEvent.getKeyCode());
+        gameManager.getPlayerPlaneModel().getBitSet().set(keyEvent.getKeyCode());
     }
 
     @Override
     public void keyReleased(KeyEvent keyEvent) {
-        gameManager.getBitSet().clear(keyEvent.getKeyCode());
+        gameManager.getPlayerPlaneModel().getBitSet().clear(keyEvent.getKeyCode());
+    }
+
+    public static void setRunning(boolean bool) {
+        isRunning = bool;
     }
 }

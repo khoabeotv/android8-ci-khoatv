@@ -8,6 +8,7 @@ import controllers.strategies.MoveDownRightBehavior;
 import gui.GameFrame;
 import models.EnemyPlaneModel;
 import models.ItemMapModel;
+import models.PlayerPlaneModel;
 import utils.Utils;
 import views.EnemyWhiteView;
 
@@ -21,10 +22,10 @@ import java.util.List;
  */
 public class GameManager {
 
-    public static final List<GameController> gameControllers = new ArrayList<>();
     public static final int SUM_ITEM_MAP = GameFrame.HEIGHT_F / ItemMapController.HEIGHT_ITEM;
     public static final int DELAY_ADD_ENEMY = 1000;
     public static final int DELAY_ADD_POWER_UP = 10000;
+    public static List<GameController> gameControllers;
 
     private GameController playerPlane;
     private long lastTimeAddEnemy;
@@ -32,6 +33,8 @@ public class GameManager {
     private int itemMapIndex;
 
     public GameManager() {
+        gameControllers = new ArrayList<>();
+
         Image image = Utils.loadImageFromRes("plane1.png");
         playerPlane = new PlayerPlaneController(
                 (GameFrame.WIDTH_F - image.getWidth(null)) / 2,
@@ -40,9 +43,8 @@ public class GameManager {
         );
 
         GameController backgroundOne = new ItemMapController(0, 0);
-        GameController backgroundTwo = new ItemMapController(0, -Utils.loadImageFromRes("background.png").getHeight(null));
-
         gameControllers.add(backgroundOne);
+        GameController backgroundTwo = new ItemMapController(0, -Utils.loadImageFromRes("background.png").getHeight(null));
         gameControllers.add(backgroundTwo);
 
         itemMapIndex = 102;
@@ -52,6 +54,7 @@ public class GameManager {
             gameControllers.add(itemMap);
             itemMapIndex--;
         }
+
         gameControllers.add(playerPlane);
     }
 
@@ -142,7 +145,7 @@ public class GameManager {
         }
     }
 
-    public BitSet getBitSet() {
-        return ((PlayerPlaneController) playerPlane).getBitSet();
+    public PlayerPlaneModel getPlayerPlaneModel() {
+        return (PlayerPlaneModel) playerPlane.getModel();
     }
 }
