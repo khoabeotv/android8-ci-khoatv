@@ -64,8 +64,9 @@ public class PlayerPlaneController extends GameController implements Collision {
                 model.setDead(false);
                 CollisionController.instance.add(this);
             } else {
-                GameManager.gameControllers.remove(this);
+                model.setAlive(false);
                 GamePanel.setRunning(false);
+                CollisionController.instance = new CollisionController();
                 GameFrame.mainPanel.showPanel(MainPanel.TAG_GAME_OVER);
             }
         }

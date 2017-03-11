@@ -1,5 +1,6 @@
 package views;
 
+import gui.GameFrame;
 import models.GameModel;
 import models.PlayerPlaneModel;
 
@@ -25,6 +26,9 @@ public class PlayerPlaneView extends GameView {
         for (int i = 0; i < ((PlayerPlaneModel)model).getTurn(); i++) {
             g2d.drawImage(imageTurn, i * 20, 0, 20, 20, null );
         }
+        g2d.setFont(new Font(null, Font.BOLD, 15));
+        g2d.setColor(Color.white);
+        g2d.drawString("Score: " + ((PlayerPlaneModel) model).getScore(), GameFrame.WIDTH_F - 100, 15);
     }
 
     public boolean explode() {

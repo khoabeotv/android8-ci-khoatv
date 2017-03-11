@@ -1,6 +1,6 @@
 package views;
 
-import models.EnemyPlaneModel;
+import models.EnemyModel;
 import models.GameModel;
 import utils.Utils;
 
@@ -9,7 +9,7 @@ import java.awt.*;
 /**
  * Created by KhoaBeo on 3/4/2017.
  */
-public class EnemyWhiteView extends EnemyPlaneView {
+public class EnemyWhiteView extends EnemyView {
 
     private Animation animation;
 
@@ -20,7 +20,7 @@ public class EnemyWhiteView extends EnemyPlaneView {
 
     @Override
     public void draw(Graphics2D g2d, GameModel model) {
-        if (!((EnemyPlaneModel) model).isDead())
+        if (!((EnemyModel) model).isDead())
             setImage();
         super.draw(g2d, model);
     }

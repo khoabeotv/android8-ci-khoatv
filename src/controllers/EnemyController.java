@@ -2,10 +2,11 @@ package controllers;
 
 import collision.Collision;
 import controllers.strategies.MoveBehavior;
-import models.EnemyPlaneModel;
+import models.EnemyModel;
 import program.GameManager;
 import utils.Utils;
-import views.EnemyPlaneView;
+import views.EnemyTankView;
+import views.EnemyView;
 
 import java.awt.Image;
 
@@ -16,34 +17,38 @@ import java.awt.Image;
 public class EnemyController extends GameController implements Collision {
 
     public static final int DELAY_SHOOT = 3000;
+    public static int DELAY_ADD_ENEMY = 1500;
 
     private long lastTimeAddBullet;
     private MoveBehavior moveBehavior;
 
-    public EnemyController(EnemyPlaneModel model, EnemyPlaneView view) {
+    public EnemyController(EnemyModel model, EnemyView view) {
         super(view, model);
         CollisionController.instance.add(this);
+        GameManager.gameControllers.add(this);
     }
 
-    public EnemyController(int x, int y, Image image, int hp) {
-        this(new EnemyPlaneModel(
+    public EnemyController(int x, int y, Image image, int hp, int score, int speed) {
+        this(new EnemyModel(
                         x,
                         y,
                         image.getWidth(null),
                         image.getHeight(null),
-                        hp),
-                new EnemyPlaneView(image)
+                        hp,
+                        score,
+                        speed),
+                new EnemyView(image)
         );
     }
 
     @Override
     public void run() {
-        EnemyPlaneModel model = (EnemyPlaneModel) this.model;
+        EnemyModel model = (EnemyModel) this.model;
         if (!model.isDead()) {
             shoot();
             moveBehavior.move(model);
-        } else if (!((EnemyPlaneView) view).explode()) {
-            GameManager.gameControllers.remove(this);
+        } else if (!((EnemyView) view).explode()) {
+            model.setAlive(false);
         }
     }
 
@@ -63,10 +68,11 @@ public class EnemyController extends GameController implements Collision {
     @Override
     public void collide(Collision other) {
         if (other instanceof PlayerBulletController || other instanceof PlayerRocketController) {
-            EnemyPlaneModel model = (EnemyPlaneModel) this.model;
+            EnemyModel model = (EnemyModel) this.model;
             model.setHp(model.getHp() - 1);
             if (model.getHp() == 0) {
-                model.setDead(true);
+                if (!(view instanceof EnemyTankView))
+                    model.setDead(true);
                 CollisionController.instance.remove(this);
             }
         }

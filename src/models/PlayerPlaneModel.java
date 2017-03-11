@@ -13,6 +13,7 @@ public class PlayerPlaneModel extends GameModel {
     private int bulletLevel;
     private int turn;
     private boolean dead;
+    private int score;
 
     public PlayerPlaneModel(int x, int y, int width, int height) {
         super(x, y, width, height);
@@ -91,5 +92,13 @@ public class PlayerPlaneModel extends GameModel {
 
     public void setDead(boolean dead) {
         this.dead = dead;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void increaseScore(int score) {
+        this.score += score;
     }
 }

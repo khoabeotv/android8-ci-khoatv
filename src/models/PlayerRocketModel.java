@@ -32,7 +32,7 @@ public class PlayerRocketModel extends GameModel {
     }
 
     public void move() {
-        if (GameManager.gameControllers.contains(enemyPlane) && !((EnemyPlaneModel) enemyPlane.getModel()).isDead()) {
+        if (GameManager.gameControllers.contains(enemyPlane) && !((EnemyModel) enemyPlane.getModel()).isDead()) {
             if (x - 10 > enemyPlane.getModel().x) {
                 x -= SPEED;
             } else if (x + 10 < enemyPlane.getModel().x) {

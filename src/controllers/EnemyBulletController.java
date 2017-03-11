@@ -30,7 +30,7 @@ public class EnemyBulletController extends GameController implements Collision {
     @Override
     public void collide(Collision other) {
         if (other instanceof PlayerPlaneController) {
-            Utils.gameRemove(this);
+            model.setAlive(false);
         }
     }
 }

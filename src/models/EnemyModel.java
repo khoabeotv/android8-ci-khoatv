@@ -5,15 +5,18 @@ import gui.GameFrame;
 /**
  * Created by KhoaBeo on 2/27/2017.
  */
-public class EnemyPlaneModel extends GameModel {
+public class EnemyModel extends GameModel {
 
-    public static final int SPEED = 2;
+    public int speed;
     private int hp;
     private boolean dead;
+    private int score;
 
-    public EnemyPlaneModel(int x, int y, int width, int height, int hp) {
+    public EnemyModel(int x, int y, int width, int height, int hp, int score, int speed) {
         super(x, y, width, height);
         this.hp = hp;
+        this.score = score;
+        this.speed = speed;
     }
 
     public boolean isDead() {
@@ -41,7 +44,11 @@ public class EnemyPlaneModel extends GameModel {
     }
 
     public void move(int dx, int dy) {
-        x += dx * SPEED;
-        y += dy * SPEED;
+        x += dx * speed;
+        y += dy * speed;
+    }
+
+    public int getScore() {
+        return score;
     }
 }

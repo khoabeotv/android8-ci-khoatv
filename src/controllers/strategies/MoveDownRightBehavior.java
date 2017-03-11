@@ -1,6 +1,6 @@
 package controllers.strategies;
 
-import models.EnemyPlaneModel;
+import models.EnemyModel;
 import models.GameModel;
 
 /**
@@ -9,6 +9,6 @@ import models.GameModel;
 public class MoveDownRightBehavior implements MoveBehavior {
     @Override
     public void move(GameModel model) {
-        ((EnemyPlaneModel)model).move(1, 1);
+        ((EnemyModel)model).move(1, 1);
     }
 }

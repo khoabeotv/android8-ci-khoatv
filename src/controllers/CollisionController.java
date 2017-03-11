@@ -11,11 +11,11 @@ import java.util.List;
  */
 public class CollisionController {
 
-    public static final CollisionController instance = new CollisionController();
+    public static CollisionController instance = new CollisionController();
 
     public List<Collision> collisionList;
 
-    private CollisionController() {
+    CollisionController() {
         collisionList = new ArrayList<>();
     }
 

@@ -13,12 +13,14 @@ public abstract class GameModel {
     protected int y;
     protected int width;
     protected int height;
+    private boolean alive;
 
     public GameModel(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        this.alive = true;
     }
 
     public int getX() {
@@ -48,4 +50,12 @@ public abstract class GameModel {
     }
 
     public abstract boolean outScreen();
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
 }

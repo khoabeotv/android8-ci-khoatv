@@ -6,10 +6,11 @@ import controllers.strategies.MoveDownBehavior;
 import controllers.strategies.MoveDownLeftBehavior;
 import controllers.strategies.MoveDownRightBehavior;
 import gui.GameFrame;
-import models.EnemyPlaneModel;
+import models.EnemyModel;
 import models.ItemMapModel;
 import models.PlayerPlaneModel;
 import utils.Utils;
+import views.EnemyTankView;
 import views.EnemyWhiteView;
 
 import java.awt.*;
@@ -23,7 +24,6 @@ import java.util.List;
 public class GameManager {
 
     public static final int SUM_ITEM_MAP = GameFrame.HEIGHT_F / ItemMapController.HEIGHT_ITEM;
-    public static final int DELAY_ADD_ENEMY = 1000;
     public static final int DELAY_ADD_POWER_UP = 10000;
     public static List<GameController> gameControllers;
 
@@ -76,41 +76,58 @@ public class GameManager {
                     addItemMap();
                 }
                 i--;
+            } else if (!gameController.getModel().isAlive()) {
+                if (gameController instanceof EnemyController) {
+                    int score = ((EnemyModel) gameController.getModel()).getScore();
+                    ((PlayerPlaneModel) playerPlane.getModel()).increaseScore(score);
+                }
+                Utils.gameRemove(gameController);
             }
         }
         setBackground();
         addEnemy();
         addPowerUp();
+        checkScore();
         CollisionController.instance.checkCollide();
     }
 
     private void addEnemy() {
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastTimeAddEnemy > DELAY_ADD_ENEMY) {
+        if (currentTime - lastTimeAddEnemy > EnemyController.DELAY_ADD_ENEMY) {
             Random rd = new Random();
-            EnemyController enemyPlane;
+            EnemyController enemy;
             int x = rd.nextInt(GameFrame.WIDTH_F + 200) - 100;
             if (x < 0) {
                 Image image = Utils.loadImageFromRes("enemy-green-1.png");
-                enemyPlane = new EnemyController(x, -50, image, 1);
-                enemyPlane.setMoveBehavior(new MoveDownRightBehavior());
+                enemy = new EnemyController(x, -50, image, 1, 10, 2);
+                enemy.setMoveBehavior(new MoveDownRightBehavior());
             } else if (x > GameFrame.WIDTH_F) {
                 Image image = Utils.loadImageFromRes("enemy-green-2.png");
-                enemyPlane = new EnemyController(x, -50, image, 1);
-                enemyPlane.setMoveBehavior(new MoveDownLeftBehavior());
+                enemy = new EnemyController(x, -50, image, 1, 10, 2);
+                enemy.setMoveBehavior(new MoveDownLeftBehavior());
             } else {
                 if (x % 2 == 0) {
                     Image image = Utils.loadImageFromRes("enemy-green-3.png");
-                    enemyPlane = new EnemyController(x, -50, image, 1);
-                } else {
-                    enemyPlane = new EnemyController(
-                            new EnemyPlaneModel(rd.nextInt(GameFrame.WIDTH_F), -50, 32, 32, 3),
+                    enemy = new EnemyController(x, -50, image, 1, 10, 2);
+                    enemy.setMoveBehavior(new MoveDownBehavior());
+                }
+
+                if (x % 3 == 0){
+                    enemy = new EnemyController(
+                            new EnemyModel(rd.nextInt(GameFrame.WIDTH_F), -50, 32, 32, 3, 20, 2),
                             new EnemyWhiteView("enemy_plane_white")
                     );
+                    enemy.setMoveBehavior(new MoveDownBehavior());
                 }
-                enemyPlane.setMoveBehavior(new MoveDownBehavior());
+
+                if (x % 4 == 0 && ((PlayerPlaneModel) playerPlane.getModel()).getScore() > 100) {
+                    enemy = new EnemyController(
+                            new EnemyModel(rd.nextInt(GameFrame.WIDTH_F), -50, 30, 50, 5, 30, 1),
+                            new EnemyTankView()
+                    );
+                    enemy.setMoveBehavior(new MoveDownBehavior());
+                }
             }
-            gameControllers.add(enemyPlane);
             lastTimeAddEnemy = currentTime;
         }
     }
@@ -142,6 +159,22 @@ public class GameManager {
             ((ItemMapModel) backgroundTwo.getModel()).setY(-backgroundTwo.getModel().getHeight());
         } else if (backgroundTwo.getModel().getY() == 0) {
             ((ItemMapModel) backgroundOne.getModel()).setY(-backgroundOne.getModel().getHeight());
+        }
+    }
+
+    private void checkScore() {
+        int score = ((PlayerPlaneModel) playerPlane.getModel()).getScore();
+
+        if (score > 100) {
+            EnemyController.DELAY_ADD_ENEMY = 800;
+        }
+
+        if (score > 200) {
+            EnemyController.DELAY_ADD_ENEMY = 500;
+        }
+
+        if (score > 400) {
+            EnemyController.DELAY_ADD_ENEMY = 200;
         }
     }
 

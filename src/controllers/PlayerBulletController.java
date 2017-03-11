@@ -1,9 +1,8 @@
 package controllers;
 
 import collision.Collision;
-import models.EnemyPlaneModel;
+import models.EnemyModel;
 import models.PlayerBulletModel;
-import utils.Utils;
 import views.PlayerBulletView;
 import java.awt.Image;
 
@@ -30,8 +29,8 @@ public class PlayerBulletController extends GameController implements Collision 
     @Override
     public void collide(Collision other) {
         if (other instanceof EnemyController) {
-            if (!(((EnemyPlaneModel)other.getModel()).isDead())) {
-                Utils.gameRemove(this);
+            if (!(((EnemyModel)other.getModel()).isDead())) {
+                model.setAlive(false);
             }
         }
     }
